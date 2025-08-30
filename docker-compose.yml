@@ -1,0 +1,75 @@
+services:
+  # proxy:
+  #   image: nginx:alpine
+  #   container_name: pay_together_proxy
+  #   ports:
+  #     - "80:80"
+  #   restart: unless-stopped
+  #   networks:
+  #     - pay_together_app_proxy
+
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    container_name: pay_together-fe
+    image: pay_together-fe
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    networks:
+      - pay_together_app_proxy
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: pay_together-be
+    image: pay_together-be
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    networks:
+      - pay_together_app_be
+      - pay_together_app_proxy
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:15
+    container_name: pay_together_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pay_together
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pay_together_app_be
+
+  redis:
+    image: redis:7
+    container_name: pay_together_redis
+    restart: always
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - pay_together_app_be
+
+networks:
+  pay_together_app_proxy:
+    driver: bridge
+  pay_together_app_be:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
