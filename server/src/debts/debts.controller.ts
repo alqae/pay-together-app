@@ -1,0 +1,223 @@
+import {
+  ApiBearerAuth,
+  ApiNotFoundResponse,
+  ApiQuery,
+  ApiResponse,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Request,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  NotFoundException,
+  UnauthorizedException,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+} from '@nestjs/common';
+
+import { CreateDebtDto } from './dto/create-debt.dto';
+import { UpdateDebtDto } from './dto/update-debt.dto';
+import { DebtsService } from './debts.service';
+import { AuthGuard } from '../auth/auth.guard';
+import { Debt, User } from '@prisma/client';
+
+@UseGuards(AuthGuard)
+@ApiBearerAuth('access-token')
+@Controller('debts')
+export class DebtsController {
+  constructor(private readonly debtsService: DebtsService) {}
+
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      example: {
+        id: 0,
+        amount: 0,
+        description: 'Description of the debt',
+        dueDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        paid: false,
+        userId: 0,
+      } as Debt,
+    },
+  })
+  @Post()
+  create(
+    @Body() createDebtDto: CreateDebtDto,
+    @Request() req: Request & { user: User },
+  ) {
+    return this.debtsService.create(createDebtDto, req.user.id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get()
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      type: 'array',
+      items: {
+        example: {
+          id: 0,
+          amount: 0,
+          description: 'Description of the debt',
+          dueDate: new Date(),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          paid: false,
+          userId: 0,
+        } as Debt,
+      },
+    },
+  })
+  @ApiQuery({ name: 'description', required: false, type: String })
+  @ApiQuery({ name: 'paid', required: false, type: Boolean })
+  findAll(
+    @Request() req: Request & { user: User },
+    @Query('description') description?: string,
+    @Query('paid') paid?: boolean,
+  ) {
+    return this.debtsService.findAll(req.user.id, description, paid);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      example: {
+        id: 0,
+        amount: 0,
+        description: 'Description of the debt',
+        dueDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        paid: false,
+        userId: 0,
+      } as Debt,
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+    type: NotFoundException,
+    example: new NotFoundException().getResponse(),
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: UnauthorizedException,
+    example: new UnauthorizedException().getResponse(),
+  })
+  @Patch(':id/toggle-paid')
+  async togglePaid(
+    @Param('id') id: string,
+    @Request() req: Request & { user: User },
+  ) {
+    const debt = await this.debtsService.findOne(+id);
+
+    if (!debt) {
+      return new NotFoundException();
+    }
+
+    if (debt.userId !== req.user.id) {
+      return new UnauthorizedException();
+    }
+
+    return this.debtsService.setPaid(+id, !debt.paid);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      example: {
+        id: 0,
+        amount: 0,
+        description: 'Description of the debt',
+        dueDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        paid: false,
+        userId: 0,
+      } as Debt,
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+    type: NotFoundException,
+    example: new NotFoundException().getResponse(),
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: UnauthorizedException,
+    example: new UnauthorizedException().getResponse(),
+  })
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updateDebtDto: UpdateDebtDto,
+    @Request() req: Request & { user: User },
+  ) {
+    const debt = await this.debtsService.findOne(+id);
+
+    if (!debt) {
+      return new NotFoundException();
+    }
+
+    if (debt.userId !== req.user.id) {
+      return new UnauthorizedException();
+    }
+
+    return this.debtsService.update(+id, updateDebtDto);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      example: {
+        id: 0,
+        amount: 0,
+        description: 'Description of the debt',
+        dueDate: new Date(),
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        paid: false,
+        userId: 0,
+      } as Debt,
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+    type: NotFoundException,
+    example: new NotFoundException().getResponse(),
+  })
+  @ApiUnauthorizedResponse({
+    description: 'Unauthorized',
+    type: UnauthorizedException,
+    example: new UnauthorizedException().getResponse(),
+  })
+  @Delete(':id')
+  async remove(
+    @Param('id') id: string,
+    @Request() req: Request & { user: User },
+  ) {
+    const debt = await this.debtsService.findOne(+id);
+
+    if (!debt) {
+      return new NotFoundException();
+    }
+
+    if (debt.userId !== req.user.id) {
+      return new UnauthorizedException();
+    }
+
+    return this.debtsService.remove(+id);
+  }
+}
