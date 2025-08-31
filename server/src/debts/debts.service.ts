@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
+import { format } from 'fast-csv';
 
 import { CreateDebtDto } from './dto/create-debt.dto';
 import { UpdateDebtDto } from './dto/update-debt.dto';
 import { PrismaService } from '../prisma.service';
-import { Prisma, User } from '@prisma/client';
+import { Debt, Prisma, User } from '@prisma/client';
+import { Response } from 'express';
 
 @Injectable()
 export class DebtsService {
@@ -72,5 +74,14 @@ export class DebtsService {
 
   remove(id: number) {
     return this.prisma.debt.delete({ where: { id } });
+  }
+
+  generateCsv(debts: Debt[], res: Response, filename = 'debts.csv') {
+    res.set('Content-Type', 'text/csv');
+    res.set('Content-Disposition', `attachment; filename="${filename}"`);
+    const csvStream = format({ headers: true });
+    csvStream.pipe(res);
+    debts.forEach((row) => csvStream.write(row));
+    csvStream.end();
   }
 }
