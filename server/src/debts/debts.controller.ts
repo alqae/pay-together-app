@@ -55,12 +55,22 @@ export class DebtsController {
   })
   @ApiQuery({ name: 'description', required: false, type: String })
   @ApiQuery({ name: 'paid', required: false, type: Boolean })
+  @ApiQuery({ name: 'skip', required: true, default: 0, type: Number })
+  @ApiQuery({ name: 'take', required: true, default: 10, type: Number })
   findAll(
     @Request() req: Request & { user: User },
+    @Query('skip') skip: number,
+    @Query('take') take: number,
     @Query('description') description?: string,
     @Query('paid') paid?: boolean,
   ) {
-    return this.debtsService.findAll(req.user.id, description, paid);
+    return this.debtsService.getDebsPaginated(
+      req.user.id,
+      skip,
+      take,
+      description,
+      paid,
+    );
   }
 
   @HttpCode(HttpStatus.OK)
@@ -181,7 +191,7 @@ export class DebtsController {
     @Query('description') description?: string,
     @Query('paid') paid?: boolean,
   ) {
-    const debts = await this.debtsService.findAll(
+    const debts = await this.debtsService.getDebsUnpaginated(
       req.user.id,
       description,
       paid,
