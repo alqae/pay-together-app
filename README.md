@@ -1,21 +1,29 @@
 # Pay Together App
 
-## Server
+This repository contains both the **frontend** and **backend** of Pay Together App.
 
-- NestJS (version 11)
+## 📂 Structure
 
-## Web
+- `web/` → Frontend application (Angular 20)
+- `server/` → Backend application (NestJS 11)
 
-- Angular (version 20)
+## ⚙️ Node.js version
 
-## Database
+Both projects run with the same Node.js version defined in [`.nvmrc`](.nvmrc).
+We recommend using [NVM](https://github.com/nvm-sh/nvm) to ensure the correct version.
 
-- PostgreSQL (version 15)
+### Using NVM
 
-## Caching
+Run the following command at the root of the project:
 
-- Redis (version 7)
+```bash
+nvm use
+````
 
-## Authentication
+If you don’t have the required Node.js version installed, run:
 
-- JWT
+```bash
+nvm install
+```
+
+This will automatically set the correct version based on `.nvmrc`.
