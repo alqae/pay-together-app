@@ -84,4 +84,20 @@ export class DebtsService {
     debts.forEach((row) => csvStream.write(row));
     csvStream.end();
   }
+
+  async countDebts(
+    userId: User['id'],
+  ): Promise<{ pendingBalance: number; paidDebts: number }> {
+    const pendingBalance = await this.prisma.debt.aggregate({
+      where: { userId, paid: false },
+      _sum: { amount: true },
+    });
+    const paidDebts = await this.prisma.debt.count({
+      where: { userId, paid: true },
+    });
+    return {
+      pendingBalance: pendingBalance._sum.amount || 0,
+      paidDebts,
+    };
+  }
 }
