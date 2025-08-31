@@ -89,7 +89,7 @@ export class AuthController {
   })
   @ApiBearerAuth('access-token')
   @Post('whoami')
-  whoAmI(@Request() req: Request) {
-    return (req as Request & { user: User }).user;
+  whoAmI(@Request() req: Request & { user: User }) {
+    return req.user;
   }
 }
