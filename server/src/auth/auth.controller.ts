@@ -15,6 +15,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 
+import { exampleLoginSuccess, exampleUser } from './constants';
 import { RegisterDto } from './dto/register.dto';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
@@ -33,11 +34,7 @@ export class AuthController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    schema: {
-      example: {
-        access_token: 'your_access_token',
-      },
-    },
+    schema: { example: exampleLoginSuccess },
   })
   @Post('login')
   signIn(@Body() signInDto: LoginDto) {
@@ -52,11 +49,7 @@ export class AuthController {
   })
   @ApiResponse({
     status: HttpStatus.OK,
-    schema: {
-      example: {
-        access_token: 'your_access_token',
-      },
-    },
+    schema: { example: exampleLoginSuccess },
   })
   @Post('register')
   signUp(@Body() registerDto: RegisterDto) {
@@ -74,19 +67,7 @@ export class AuthController {
     type: UnauthorizedException,
     example: new UnauthorizedException().getResponse(),
   })
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      example: {
-        id: 0,
-        email: 'your_email',
-        fullName: 'your_full_name',
-        tokenVersion: 0,
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      } as Omit<User, 'password'>,
-    },
-  })
+  @ApiResponse({ status: HttpStatus.OK, schema: { example: exampleUser } })
   @ApiBearerAuth('access-token')
   @Post('whoami')
   whoAmI(@Request() req: Request & { user: User }) {

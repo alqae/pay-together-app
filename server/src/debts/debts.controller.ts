@@ -28,7 +28,8 @@ import { CreateDebtDto } from './dto/create-debt.dto';
 import { UpdateDebtDto } from './dto/update-debt.dto';
 import { DebtsService } from './debts.service';
 import { AuthGuard } from '../auth/auth.guard';
-import { Debt, User } from '@prisma/client';
+import { exampleDebt } from './constants';
+import { User } from '@prisma/client';
 
 @UseGuards(AuthGuard)
 @ApiBearerAuth('access-token')
@@ -37,21 +38,7 @@ export class DebtsController {
   constructor(private readonly debtsService: DebtsService) {}
 
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      example: {
-        id: 0,
-        amount: 0,
-        description: 'Description of the debt',
-        dueDate: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        paid: false,
-        userId: 0,
-      } as Debt,
-    },
-  })
+  @ApiResponse({ status: HttpStatus.OK, schema: { example: exampleDebt } })
   @Post()
   create(
     @Body() createDebtDto: CreateDebtDto,
@@ -64,21 +51,7 @@ export class DebtsController {
   @Get()
   @ApiResponse({
     status: HttpStatus.OK,
-    schema: {
-      type: 'array',
-      items: {
-        example: {
-          id: 0,
-          amount: 0,
-          description: 'Description of the debt',
-          dueDate: new Date(),
-          createdAt: new Date(),
-          updatedAt: new Date(),
-          paid: false,
-          userId: 0,
-        } as Debt,
-      },
-    },
+    schema: { type: 'array', items: { example: exampleDebt } },
   })
   @ApiQuery({ name: 'description', required: false, type: String })
   @ApiQuery({ name: 'paid', required: false, type: Boolean })
@@ -91,21 +64,7 @@ export class DebtsController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      example: {
-        id: 0,
-        amount: 0,
-        description: 'Description of the debt',
-        dueDate: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        paid: false,
-        userId: 0,
-      } as Debt,
-    },
-  })
+  @ApiResponse({ status: HttpStatus.OK, schema: { example: exampleDebt } })
   @ApiNotFoundResponse({
     description: 'Not found',
     type: NotFoundException,
@@ -135,21 +94,7 @@ export class DebtsController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      example: {
-        id: 0,
-        amount: 0,
-        description: 'Description of the debt',
-        dueDate: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        paid: false,
-        userId: 0,
-      } as Debt,
-    },
-  })
+  @ApiResponse({ status: HttpStatus.OK, schema: { example: exampleDebt } })
   @ApiNotFoundResponse({
     description: 'Not found',
     type: NotFoundException,
@@ -180,21 +125,7 @@ export class DebtsController {
   }
 
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      example: {
-        id: 0,
-        amount: 0,
-        description: 'Description of the debt',
-        dueDate: new Date(),
-        createdAt: new Date(),
-        updatedAt: new Date(),
-        paid: false,
-        userId: 0,
-      } as Debt,
-    },
-  })
+  @ApiResponse({ status: HttpStatus.OK, schema: { example: exampleDebt } })
   @ApiNotFoundResponse({
     description: 'Not found',
     type: NotFoundException,
