@@ -5,7 +5,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Register } from '@auth/components/register/register';
 import { AuthRoutingModule } from '@auth/auth-routing-module';
 import { Login } from '@auth/components/login/login';
-import { CoreModule } from '@core/core-module';
 
 @NgModule({
   declarations: [
@@ -13,7 +12,6 @@ import { CoreModule } from '@core/core-module';
     Register
   ],
   imports: [
-    CoreModule,
     CommonModule,
     ReactiveFormsModule,
     AuthRoutingModule

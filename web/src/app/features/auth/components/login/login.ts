@@ -1,4 +1,9 @@
 import { Component } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+
+import { Auth } from '@core/services/auth';
 
 @Component({
   selector: 'app-login',
@@ -7,5 +12,35 @@ import { Component } from '@angular/core';
   styleUrl: './login.css'
 })
 export class Login {
+  loginForm: FormGroup;
+  isLoading$: Observable<boolean>;
 
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private auth: Auth
+  ) {
+    this.loginForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]]
+    });
+
+    this.isLoading$ = this.auth.isLoading$;
+  }
+
+  onSubmit() {
+    this.auth.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
+      next: () => this.router.navigate(['/debts']),
+    });
+  }
+
+  hasError(field: string): boolean {
+    const control = this.loginForm.get(field);
+    return !!(control?.invalid && (control.dirty || control.touched));
+  }
+
+  getControlError(field: string, error: string): string {
+    const control = this.loginForm.get(field);
+    return control?.errors?.[error];
+  }
 }

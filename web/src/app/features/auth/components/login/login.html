@@ -1,1 +1,63 @@
-<p>login works!</p>
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="form-signin">
+  <h1 class="h3 fw-medium text-center">Welcome back</h1>
+  <p class="text-center text-muted mb-3">Please sign in to continue</p>
+
+  <div class="form-floating">
+    <input
+      type="email"
+      class="form-control"
+      [class.is-invalid]="hasError('email')"
+      id="email"
+      autocomplete="email"
+      formControlName="email"
+      placeholder="name@example.com"
+    >
+    <label for="email" [class.text-danger]="hasError('email')">Email address</label>
+
+    @if (hasError('email')) {
+      <div class="invalid-tooltip">
+        @if (getControlError('email', 'required')) {
+          El email es requerido
+        }
+
+        @if (getControlError('email', 'email')) {
+          Ingresa un email válido
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-floating mb-3">
+    <input
+      type="password"
+      class="form-control"
+      [class.is-invalid]="hasError('password')"
+      id="password"
+      formControlName="password"
+      placeholder="Password"
+    >
+    <label for="password" [class.text-danger]="hasError('password')">Password</label>
+
+    @if (hasError('password')) {
+      <div class="invalid-tooltip">
+        @if (getControlError('password', 'required')) {
+          El password es requerido
+        }
+
+        @if (getControlError('password', 'minlength')) {
+          El password debe tener al menos 6 caracteres
+        }
+      </div>
+    }
+  </div>
+
+  <button
+    [disabled]="loginForm.invalid || (isLoading$ | async)"
+    class="w-100 btn btn-primary"
+    type="submit"
+  >
+    Sign in
+  </button>
+
+  <a routerLink="/auth/register" class="d-block text-center mt-2">Don't have an account?</a>
+</form>

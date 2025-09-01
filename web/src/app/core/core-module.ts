@@ -9,6 +9,7 @@ import { Debt } from '@core/services/debt';
 import { ToastContainer } from '@core/components/toast-container/toast-container';
 import { ErrorInterceptor } from '@core/interceptors/error-interceptor';
 import { AuthInterceptor } from '@core/interceptors/auth-interceptor';
+import { GuestGuard } from '@core/guards/guest-guard';
 import { AuthGuard } from '@core/guards/auth-guard';
 
 @NgModule({
@@ -18,8 +19,9 @@ import { AuthGuard } from '@core/guards/auth-guard';
   providers: [
     Auth,
     Debt,
-    NotificationService,
     AuthGuard,
+    GuestGuard,
+    NotificationService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
@@ -29,8 +31,8 @@ import { AuthGuard } from '@core/guards/auth-guard';
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
       multi: true
-    }
-  ]
+    },
+  ],
 })
 export class CoreModule {
   constructor(@Optional() @SkipSelf() parentModule: CoreModule) {

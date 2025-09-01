@@ -8,6 +8,7 @@ import {
   Request,
   UnauthorizedException,
   BadRequestException,
+  Get,
 } from '@nestjs/common';
 import {
   ApiBearerAuth,
@@ -87,7 +88,7 @@ export class AuthController {
   })
   @ApiResponse({ status: HttpStatus.OK, schema: { example: exampleUser } })
   @ApiBearerAuth('access-token')
-  @Post('whoami')
+  @Get('whoami')
   whoAmI(@Request() req: Request & { user: User }) {
     return req.user;
   }

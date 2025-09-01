@@ -1,0 +1,15 @@
+.form-signup input[id="name"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.form-signup input[id="email"] {
+  border-radius: 0;
+}
+
+.form-signup input[id="password"] {
+  border-top-right-radius: 0;
+  border-top-left-radius: 0;
+}
+

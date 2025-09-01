@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpInterceptor } from '@angular/common/http';
 
-import { Auth } from '../services/auth';
-
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private auth: Auth) {}
+  constructor() {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
-    const token = this.auth.getCurrentToken();
+    const token = window.localStorage.getItem("accessToken");
 
     if (token) {
       req = req.clone({

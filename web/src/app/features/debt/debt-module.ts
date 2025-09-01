@@ -6,8 +6,6 @@ import { DebtCreate } from '@debt/pages/debt-create/debt-create';
 import { DebtRoutingModule } from '@debt/debt-routing-module';
 import { DebtList } from '@debt/pages/debt-list/debt-list';
 import { DebtEdit } from '@debt/pages/debt-edit/debt-edit';
-import { CoreModule } from '@core/core-module';
-
 
 @NgModule({
   declarations: [
@@ -17,7 +15,6 @@ import { CoreModule } from '@core/core-module';
     DebtDetail
   ],
   imports: [
-    CoreModule,
     CommonModule,
     DebtRoutingModule
   ]

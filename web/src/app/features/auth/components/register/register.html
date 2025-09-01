@@ -1,1 +1,82 @@
-<p>register works!</p>
+<form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="form-signup">
+  <h1 class="h3 fw-medium text-center">Register</h1>
+  <p class="text-center text-muted mb-3">Please fill the form to register</p>
+
+  <div class="form-floating">
+    <input
+      type="text"
+      class="form-control"
+      [class.is-invalid]="hasError('name')"
+      id="name"
+      formControlName="name"
+      placeholder="Name"
+    >
+    <label for="name" [class.text-danger]="hasError('name')">Name</label>
+
+    @if (hasError('name')) {
+      <div class="invalid-tooltip">
+        @if (getControlError('name', 'required')) {
+          El nombre es requerido
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-floating">
+    <input
+      type="email"
+      class="form-control"
+      [class.is-invalid]="hasError('email')"
+      id="email"
+      formControlName="email"
+      placeholder="name@example.com"
+    >
+    <label for="email" [class.text-danger]="hasError('email')">Email address</label>
+
+    @if (hasError('email')) {
+      <div class="invalid-tooltip">
+        @if (getControlError('email', 'required')) {
+          El email es requerido
+        }
+
+        @if (getControlError('email', 'email')) {
+          Ingresa un email válido
+        }
+      </div>
+    }
+  </div>
+
+  <div class="form-floating mb-3">
+    <input
+      type="password"
+      class="form-control"
+      [class.is-invalid]="hasError('password')"
+      id="password"
+      formControlName="password"
+      placeholder="Password"
+    >
+    <label for="password" [class.text-danger]="hasError('password')">Password</label>
+
+    @if (hasError('password')) {
+      <div class="invalid-tooltip">
+        @if (getControlError('password', 'required')) {
+          El password es requerido
+        }
+
+        @if (getControlError('password', 'minlength')) {
+          El password debe tener al menos 6 caracteres
+        }
+      </div>
+    }
+  </div>
+
+  <button
+    [disabled]="registerForm.invalid || (isLoading$ | async)"
+    class="w-100 btn btn-primary"
+    type="submit"
+  >
+    Register
+  </button>
+
+  <a routerLink="/auth/login" class="d-block text-center mt-2">Already have an account?</a>
+</form>

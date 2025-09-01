@@ -1,10 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import {
   HttpInterceptor,
   HttpHandler,
   HttpRequest,
-  HttpErrorResponse
+  HttpErrorResponse,
+  HttpClient
 } from '@angular/common/http';
 import {
   BehaviorSubject,
@@ -15,29 +16,30 @@ import {
   throwError
 } from 'rxjs';
 
-import { NotificationService } from '../services/notification';
-import { Auth } from '../services/auth';
+import { NotificationService } from '@core/services/notification';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-
+  private API_URL = 'http://localhost:3000/';
   private isRefreshing = false;
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   constructor(
-    private notificationService: NotificationService,
-    private authService: Auth,
+    private injector: Injector,
+    private http: HttpClient,
     private router: Router,
-  ) {}
+  ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler) {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.error?.message) {
-          this.notificationService.showError(error.error.message);
+          const notificationService = this.injector.get(NotificationService);
+          notificationService.showError(error.error.message);
         }
 
-        if (error.status === 401 && !this.isRefreshing) {
+        const isAuthenticated = window.localStorage.getItem("accessToken") !== null;
+        if (error.status === 401 && isAuthenticated && !this.isRefreshing) {
           return this.handle401Error(req, next);
         }
 
@@ -51,7 +53,12 @@ export class ErrorInterceptor implements HttpInterceptor {
       this.isRefreshing = true;
       this.refreshTokenSubject.next(null);
 
-      return this.authService.refreshToken().pipe(
+      const refreshToken = window.localStorage.getItem("refreshToken");
+      return this.http.post<{ token: string }>(`${this.API_URL}auth/refresh`, null, {
+        headers: {
+          'Refresh-Token': refreshToken as string
+        }
+      }).pipe(
         switchMap((response: any) => {
           this.isRefreshing = false;
           this.refreshTokenSubject.next(response.token);
@@ -60,9 +67,12 @@ export class ErrorInterceptor implements HttpInterceptor {
         }),
         catchError((refreshError) => {
           this.isRefreshing = false;
-          this.notificationService.showError('Sorry, your session has expired');
-          this.authService.logout();
+          const notificationService = this.injector.get(NotificationService);
+          notificationService.showError('Sorry, your session has expired');
+          // this.injector.get(Auth).logout();
           this.router.navigate(['/auth/login']);
+          window.localStorage.removeItem("refreshToken");
+          window.localStorage.removeItem("accessToken");
           return throwError(() => refreshError);
         })
       );

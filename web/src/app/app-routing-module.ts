@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { AuthGuard } from '@core/guards/auth-guard';
+import { GuestGuard } from '@core/guards/guest-guard';
 
 const routes: Routes = [
   {
@@ -11,7 +12,8 @@ const routes: Routes = [
   },
   {
     path: 'auth',
-    loadChildren: () => import('./features/auth/auth-module').then(m => m.AuthModule)
+    loadChildren: () => import('./features/auth/auth-module').then(m => m.AuthModule),
+    canActivate: [GuestGuard]
   },
   {
     path: 'debts',

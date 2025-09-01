@@ -1,11 +1,30 @@
-<div class="app-container">
-  <app-header></app-header>
+@if (isAuthenticated$ | async; as isLoggedIn) {
+  <div class="app-container">
+    <app-header></app-header>
 
-  <main class="main-content">
-    <router-outlet></router-outlet>
-  </main>
+    <main class="main-content">
+      <router-outlet></router-outlet>
 
-  <app-footer></app-footer>
-</div>
+      <!-- <span>Full name: {{(auth.user$ | async)?.fullName}}</span> -->
+    </main>
+
+    <app-footer></app-footer>
+  </div>
+} @else {
+  <div class="auth-container d-flex h-100 align-items-center justify-content-center py-4 bg-body-tertiary">
+    <main class="w-100">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+}
+
+@if ((isLoadingAuth$ | async) || (isLoadingDebt$ | async)) {
+  <div class="position-fixed bottom-0 end-0 p-3">
+    <button class="btn btn-primary" type="button" disabled>
+      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+      <span class="ms-2" role="status">Loading...</span>
+    </button>
+  </div>
+}
 
 <app-toast-container></app-toast-container>
