@@ -1,0 +1,20 @@
+<div class="toast-container position-fixed p-3 bottom-0 end-0">
+  <div
+    *ngFor="let notification of notifications; trackBy: trackByFn"
+    class="toast {{getColorScheme(notification.type)}} fade show"
+    role="alert"
+    aria-live="assertive"
+    aria-atomic="true"
+  >
+    <div class="toast-header">
+      <strong class="me-auto">{{ notification.message }}</strong>
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="toast"
+        aria-label="Close"
+        (click)="removeNotification(notification.id)"
+      ></button>
+    </div>
+  </div>
+</div>
