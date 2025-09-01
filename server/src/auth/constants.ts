@@ -14,5 +14,6 @@ export const exampleUser = {
 } as Omit<User, 'password'>;
 
 export const exampleLoginSuccess = {
-  access_token: 'your_access_token',
+  accessToken: 'your_access_token',
+  refreshToken: 'your_refresh_token',
 };
