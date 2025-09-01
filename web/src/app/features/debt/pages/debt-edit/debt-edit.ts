@@ -2,7 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { DebtService } from '@core/services/debt';
+import { DebtService } from '@core/services/debt-service';
 import { Debt } from '@core/models/debt.model';
 
 @Component({

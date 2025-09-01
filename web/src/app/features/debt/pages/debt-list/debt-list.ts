@@ -1,7 +1,7 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { DebtService } from '@core/services/debt';
+import { DebtService } from '@core/services/debt-service';
 import { Debt } from '@core/models/debt.model';
 
 @Component({

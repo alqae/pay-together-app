@@ -4,8 +4,8 @@ import { finalize, tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { NotificationService } from '@core/services/notification-service';
 import { LoginResponse } from '@core/models/api-response.model';
-import { NotificationService } from './notification';
 import { User } from '@core/models/user.model';
 
 @Injectable({
@@ -27,9 +27,9 @@ export class AuthService {
   private API_URL = 'http://localhost:3000/';
 
   constructor(
+    private notificationService: NotificationService,
     private http: HttpClient,
     private router: Router,
-    private notificationService: NotificationService
   ) {
     const token = window.localStorage.getItem("accessToken");
     const refreshToken = window.localStorage.getItem("refreshToken");

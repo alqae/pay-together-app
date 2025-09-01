@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { NotificationService, Notification } from '../../../core/services/notification';
+import { NotificationService, Notification } from '@core/services/notification-service';
 
 @Component({
   selector: 'app-toast-container',
@@ -29,16 +29,6 @@ export class ToastContainer implements OnInit, OnDestroy {
 
   removeNotification(id: string): void {
     this.notificationService.remove(id);
-  }
-
-  getIconClass(type: string): string {
-    switch (type) {
-      case 'success': return 'icon-success';
-      case 'error': return 'icon-error';
-      case 'warning': return 'icon-warning';
-      case 'info': return 'icon-info';
-      default: return 'icon-info';
-    }
   }
 
   getColorScheme(type: string): string {

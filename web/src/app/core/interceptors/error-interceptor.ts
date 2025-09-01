@@ -16,7 +16,7 @@ import {
   throwError
 } from 'rxjs';
 
-import { NotificationService } from '@core/services/notification';
+import { NotificationService } from '@core/services/notification-service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -69,7 +69,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.isRefreshing = false;
           const notificationService = this.injector.get(NotificationService);
           notificationService.showError('Sorry, your session has expired');
-          // this.injector.get(Auth).logout();
+          // this.injector.get(Auth).logout(); Disabled by Circular Dependency Error
           this.router.navigate(['/auth/login']);
           window.localStorage.removeItem("refreshToken");
           window.localStorage.removeItem("accessToken");

@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
+import { DebtService } from '@core/services/debt-service';
 import { Debt } from '@core/models/debt.model';
-import { DebtService } from '@core/services/debt';
 
 @Component({
   selector: 'app-debt-detail',

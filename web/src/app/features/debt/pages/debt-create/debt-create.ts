@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { DebtService } from '@core/services/debt';
+import { DebtService } from '@core/services/debt-service';
 import { Debt } from '@core/models/debt.model';
 import { Router } from '@angular/router';
 

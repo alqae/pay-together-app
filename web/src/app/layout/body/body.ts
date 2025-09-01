@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { DebtService } from '@core/services/debt';
-import { AuthService } from '@core/services/auth';
+import { DebtService } from '@core/services/debt-service';
+import { AuthService } from '@core/services/auth-service';
 
 @Component({
   selector: 'app-root',

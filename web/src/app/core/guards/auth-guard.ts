@@ -8,7 +8,7 @@ import {
   UrlTree
 } from '@angular/router';
 
-import { AuthService } from '@core/services/auth';
+import { AuthService } from '@core/services/auth-service';
 
 type AuthGuardTypeReturn = boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree>;
 

@@ -2,9 +2,9 @@ import { NgModule, Optional, SkipSelf } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 
-import { NotificationService } from '@core/services/notification';
-import { DebtService } from '@core/services/debt';
-import { AuthService } from '@core/services/auth';
+import { NotificationService } from '@core/services/notification-service';
+import { DebtService } from '@core/services/debt-service';
+import { AuthService } from '@core/services/auth-service';
 
 import { ToastContainer } from '@core/components/toast-container/toast-container';
 import { ErrorInterceptor } from '@core/interceptors/error-interceptor';
