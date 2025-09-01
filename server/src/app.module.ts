@@ -10,8 +10,6 @@ import { AppController } from './app.controller';
 import { AuthModule } from './auth/auth.module';
 import { AppService } from './app.service';
 
-console.log('process.env.REDIS_URL', process.env.REDIS_URL);
-
 @Module({
   imports: [
     CacheModule.registerAsync({
