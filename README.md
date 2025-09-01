@@ -27,3 +27,24 @@ nvm install
 ```
 
 This will automatically set the correct version based on `.nvmrc`.
+
+## 📦 Docker
+
+### Using Docker
+
+Run the following command at the root of the project:
+
+```bash
+docker-compose up -d
+```
+
+This will start all the services defined in [docker-compose.yml](docker-compose.yml).
+
+### Stopping Docker
+
+Run the following command at the root of the project:
+
+```bash
+docker-compose down
+```
+
