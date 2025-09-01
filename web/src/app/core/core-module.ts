@@ -6,6 +6,7 @@ import { NotificationService } from '@core/services/notification';
 import { Auth } from '@core/services/auth';
 
 import { ToastContainer } from '@core/components/toast-container/toast-container';
+import { ErrorInterceptor } from '@core/interceptors/error-interceptor';
 import { AuthInterceptor } from '@core/interceptors/auth-interceptor';
 import { AuthGuard } from '@core/guards/auth-guard';
 
@@ -20,6 +21,11 @@ import { AuthGuard } from '@core/guards/auth-guard';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
       multi: true
     }
   ]
