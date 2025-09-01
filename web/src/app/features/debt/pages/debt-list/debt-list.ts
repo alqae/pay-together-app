@@ -1,8 +1,9 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 import { DebtService } from '@core/services/debt-service';
 import { Debt } from '@core/models/debt.model';
+import { DebtCountersResponse } from '@core/models/api-response.model';
 
 @Component({
   selector: 'app-debt-list',
@@ -24,7 +25,10 @@ export class DebtList implements OnInit  {
 
   public debts: Debt[] = [];
 
-  // public debts$: Observable<Debt[]>;
+  public counter: DebtCountersResponse = {
+    pendingBalance: 0,
+    paidDebts: 0,
+  };
   public isLoading$: Observable<boolean>;
 
   constructor(private readonly debtService: DebtService) {
@@ -94,9 +98,25 @@ export class DebtList implements OnInit  {
         this.error = error;
       }
     });
+
+    this.fetchCounter();
   }
 
   scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  fetchCounter() {
+    this.debtService.getCounters().subscribe({
+      next: (result) => {
+        this.counter = result;
+      },
+      error: (error) => {
+        this.counter = {
+          pendingBalance: 0,
+          paidDebts: 0,
+        };
+      }
+    });
   }
 }

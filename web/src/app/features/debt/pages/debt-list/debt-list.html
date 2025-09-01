@@ -1,3 +1,21 @@
+<div class="row g-4 py-5 row-cols-1 row-cols-lg-2">
+  <div class="col d-flex flex-column justify-content-center align-items-center">
+      <h4 class="fs-6 text-body-emphasis">Pending balance</h4>
+      <span
+        class="fs-1 fw-bold"
+        [class.text-success]="counter.pendingBalance > 0"
+        [class.text-danger]="counter.pendingBalance < 0"
+      >
+        {{ counter.pendingBalance | currency }}
+      </span>
+  </div>
+
+  <div class="col d-flex flex-column justify-content-center align-items-center">
+      <h4 class="fs-6 text-body-emphasis">Paid debts</h4>
+      <span class="fs-1 fw-bold">{{ counter.paidDebts }}</span>
+  </div>
+</div>
+
 <div class="mb-3">
   <div class="input-group mb-3">
     <span class="input-group-text" id="basic-addon1">

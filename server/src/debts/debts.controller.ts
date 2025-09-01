@@ -74,6 +74,21 @@ export class DebtsController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: HttpStatus.OK,
+    schema: {
+      example: {
+        pendingBalance: 0,
+        paidDebts: 0,
+      },
+    },
+  })
+  @Get('/counters')
+  async getDebtsCounters(@Request() req: Request & { user: User }) {
+    return this.debtsService.countDebts(req.user.id);
+  }
+
+  @HttpCode(HttpStatus.OK)
   @Get('/export')
   @ApiResponse({
     status: HttpStatus.OK,
@@ -214,20 +229,5 @@ export class DebtsController {
     }
 
     return this.debtsService.remove(+id);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @ApiResponse({
-    status: HttpStatus.OK,
-    schema: {
-      example: {
-        pendingBalance: 0,
-        paidDebts: 0,
-      },
-    },
-  })
-  @Get('/counters')
-  async getDebtsCounters(@Request() req: Request & { user: User }) {
-    return this.debtsService.countDebts(req.user.id);
   }
 }
