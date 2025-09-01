@@ -1,17 +1,27 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
+import { BehaviorSubject } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
-import { CreateDebtRequest, UpdateDebtRequest } from '../models/api-request.model';
-import { DebtCountersResponse } from '../models/api-response.model';
+import { CreateDebtRequest, UpdateDebtRequest } from '@core/models/api-request.model';
+import { DebtCountersResponse } from '@core/models/api-response.model';
+import { Debt } from '@core/models/debt.model';
 
 @Injectable({
   providedIn: 'root'
 })
-export class Debt {
+export class DebtService {
+  private isLoadingSubject = new BehaviorSubject<boolean>(false);
+  public isLoading$ = this.isLoadingSubject.asObservable();
+
+  private readonly API_URL = "http://localhost:3000/";
+
   constructor(private http: HttpClient) {}
 
   createDebt(body: CreateDebtRequest) {
-    return this.http.post("/api/debts", body);
+    this.isLoadingSubject.next(true);
+    return this.http.post(`${this.API_URL}debts`, body)
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
   getDebts(
@@ -30,29 +40,39 @@ export class Debt {
       params = params.set("paid", paid.toString())
     }
 
-    return this.http.get("/api/debts", {
-      params,
-    });
+    this.isLoadingSubject.next(true);
+    return this.http.get(`${this.API_URL}debts`, { params })
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
   getDebtById(id: number) {
-    return this.http.get("/api/debts/" + id);
+    this.isLoadingSubject.next(true);
+    return this.http.get<Debt>(`${this.API_URL}debts/` + id)
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
   updateDebt(id: number, body: UpdateDebtRequest) {
-    return this.http.put("/api/debts/" + id, body);
+    this.isLoadingSubject.next(true);
+    return this.http.patch<Debt>(`${this.API_URL}debts/` + id, body)
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
   deleteDebt(id: number) {
-    return this.http.delete("/api/debts/" + id);
+    this.isLoadingSubject.next(true);
+    return this.http.delete(`${this.API_URL}debts/` + id)
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
   togglePaid(id: number) {
-    return this.http.patch(`/api/debts/${id}/paid`, {});
+    this.isLoadingSubject.next(true);
+    return this.http.patch<Debt>(`${this.API_URL}debts/${id}/toggle-paid`, {})
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
   getCounters() {
-    return this.http.get<DebtCountersResponse>("/api/debts/counters");
+    this.isLoadingSubject.next(true);
+    return this.http.get<DebtCountersResponse>(`${this.API_URL}debts/counters`)
+      .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
   exportToCsv(description?: string, paid?: boolean) {
@@ -66,7 +86,9 @@ export class Debt {
       params = params.set("paid", paid.toString())
     }
 
-    return this.http.get("/api/debts/export", { params, responseType: "blob" })
+    this.isLoadingSubject.next(true);
+    return this.http.get(`${this.API_URL}debts/export`, { params, responseType: "blob" })
+      .pipe(finalize(() => this.isLoadingSubject.next(false)))
       .subscribe(this.downloadBlob);
   }
 

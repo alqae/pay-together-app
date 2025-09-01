@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { DebtService } from '@core/services/debt';
 import { Auth } from '@core/services/auth';
-import { Debt } from '@core/services/debt';
 
 @Component({
   selector: 'app-root',
@@ -15,9 +15,9 @@ export class Body {
   isLoadingAuth$: Observable<boolean>;
   isLoadingDebt$: Observable<boolean>;
 
-  constructor(private readonly auth: Auth, private readonly debt: Debt) {
+  constructor(private readonly auth: Auth, private readonly debtService: DebtService) {
     this.isAuthenticated$ = this.auth.isLoggedIn$;
     this.isLoadingAuth$ = this.auth.isLoading$;
-    this.isLoadingDebt$ = this.debt.isLoading$;
+    this.isLoadingDebt$ = this.debtService.isLoading$;
   }
 }

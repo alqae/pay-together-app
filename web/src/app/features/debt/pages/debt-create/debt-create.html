@@ -1,1 +1,8 @@
-<p>debt-create works!</p>
+<button type="button" class="btn btn-primary btn-sm" routerLink="/debts">
+  <i class="bi bi-arrow-left"></i>
+  Go Back
+</button>
+
+<h3 class="my-3">Create Debt</h3>
+
+<app-debt-form (onSubmit)="onSubmit($event)"></app-debt-form>

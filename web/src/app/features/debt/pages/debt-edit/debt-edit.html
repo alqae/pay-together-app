@@ -1,1 +1,17 @@
-<p>debt-edit works!</p>
+<button type="button" class="btn btn-primary btn-sm mb-3" [routerLink]="debt ? ['/debts', debt.id] : ['/debts']">
+  <i class="bi bi-arrow-left"></i>
+  Go Back
+</button>
+
+@if (isLoading$ | async) {
+  <span>Loading...</span>
+} @else if (debt) {
+  <h3 class="mb-3">Edit Debt #{{ debt.id }}</h3>
+  <app-debt-form (onSubmit)="onSubmit($event)" [defaultValue]="debt"></app-debt-form>
+} @else {
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Error</h4>
+    <p>Something went wrong.</p>
+  </div>
+}
+

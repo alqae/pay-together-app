@@ -1,11 +1,11 @@
 export type CreateDebtRequest = {
   amount: number;
   description: string;
-  dueDate: Date;
+  dueDate: string;
 };
 
 export type UpdateDebtRequest = {
   amount?: number;
   description?: string;
-  dueDate?: Date;
+  dueDate?: string;
 };

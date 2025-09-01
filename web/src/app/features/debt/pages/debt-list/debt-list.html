@@ -1,1 +1,94 @@
-<p>debt-list works!</p>
+<div class="mb-3">
+  <div class="input-group mb-3">
+    <span class="input-group-text" id="basic-addon1">
+      <i class="bi bi-search"></i>
+    </span>
+
+    <input
+      type="search"
+      class="form-control"
+      placeholder="Search"
+      aria-label="Search"
+      (input)="onSearchChange($event)"
+    >
+
+    <select class="form-select" (change)="onStatusChange($event)">
+      <option selected>Status...</option>
+      <option value="false">Pending</option>
+      <option value="true">Paid</option>
+    </select>
+
+    <button class="btn btn-outline-secondary" type="button" (click)="exportToCsv()">
+      <i class="bi bi-download"></i>
+      Export
+    </button>
+  </div>
+</div>
+
+@if (isLoading$ | async) {
+  <span>Loading...</span>
+} @else if (error) {
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">Error</h4>
+    <p>Something went wrong.</p>
+  </div>
+} @else {
+  <div class="list-group mb-3">
+
+    @for (item of debts; track item.id) {
+      <div
+        [ngClass]="{ 'bg-success border-success': item.paid, 'bg-danger border-danger': !item.paid }"
+        class="list-group-item list-group-item-action d-flex gap-3 py-3 bg-opacity-10"
+        routerLink="/debts/{{ item.id }}"
+        role="button"
+      >
+        <div class="d-flex gap-2 w-100 justify-content-between">
+          <div>
+            <h6 class="mb-0">{{ item.description }}</h6>
+
+            <p class="mb-0 opacity-75">
+              <i class="bi bi-calendar-plus"></i>
+              {{ item.createdAt | date : 'short' }}
+            </p>
+
+            <p class="mb-0 opacity-75">
+              <i class="bi bi-alarm"></i>
+              {{ item.dueDate | date : 'dd/MM/yyyy' }}
+            </p>
+
+            <span class="badge bg-opacity-100" [ngClass]="{ 'text-bg-success': item.paid, 'text-bg-danger': !item.paid }">
+              <i class="bi bi-exclamation-triangle"></i>
+              {{ item.paid ? 'Paid' : 'Pending' }}
+            </span>
+          </div>
+
+          <small>{{ item.amount | currency }}</small>
+        </div>
+      </div>
+    } @empty {
+      <div class="alert alert-info" role="alert">
+        <h4 class="alert-heading">No debts found</h4>
+        <p>You don't have any debts yet.</p>
+        <button class="btn btn-primary" routerLink="/debts/create">Create debt</button>
+      </div>
+    }
+  </div>
+
+  <nav>
+    <ul class="pagination justify-content-center">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+}

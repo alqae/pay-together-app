@@ -4,8 +4,6 @@
 
     <main class="container">
       <router-outlet></router-outlet>
-
-      <!-- <span>Full name: {{(auth.user$ | async)?.fullName}}</span> -->
     </main>
 
     <app-footer></app-footer>
@@ -18,7 +16,7 @@
   </div>
 }
 
-@if ((isLoadingAuth$ | async) || (isLoadingDebt$ | async)) {
+@if ((isLoadingAuth$ || isLoadingDebt$) | async) {
   <div class="position-fixed bottom-0 end-0 p-3">
     <button class="btn btn-primary" type="button" disabled>
       <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>

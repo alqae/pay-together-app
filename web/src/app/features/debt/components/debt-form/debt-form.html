@@ -1,0 +1,83 @@
+<form [formGroup]="debtForm" (ngSubmit)="onSubmit()">
+  <div class="mb-3">
+    <div class="form-floating">
+      <textarea
+        class="form-control"
+        [class.is-invalid]="hasError('description')"
+        placeholder="Leave a comment here"
+        id="description"
+        formControlName="description"
+        style="height: 100px"
+      ></textarea>
+      <label for="description" [class.text-danger]="hasError('description')">Description</label>
+
+      @if (hasError('description')) {
+        <div class="invalid-tooltip">
+          @if (getControlError('description', 'required')) {
+            Description is required
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <div class="input-group mb-3">
+      <span class="input-group-text">$</span>
+
+      <div class="form-floating">
+        <input
+          type="number"
+          [class.is-invalid]="hasError('amount')"
+          class="form-control"
+          id="amount"
+          formControlName="amount"
+        >
+        <label for="amount" [class.text-danger]="hasError('amount')">Amount</label>
+
+        @if (hasError('amount')) {
+          <div class="invalid-tooltip">
+            @if (getControlError('amount', 'required')) {
+              Amount is required
+            }
+
+            @if (getControlError('amount', 'min')) {
+              Amount must be at least 0
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <div class="input-group mb-3">
+      <span class="input-group-text">
+        <i class="bi bi-calendar-plus"></i>
+      </span>
+
+      <div class="form-floating">
+        <input
+          type="date"
+          [class.is-invalid]="hasError('dueDate')"
+          class="form-control"
+          id="dueDate"
+          formControlName="dueDate"
+        >
+        <label for="dueDate" [class.text-danger]="hasError('dueDate')">Due Date</label>
+
+        @if (hasError('dueDate')) {
+          <div class="invalid-tooltip">
+            @if (getControlError('dueDate', 'required')) {
+              Due date is required
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <button [disabled]="debtForm.invalid || (isLoading$ | async)" type="submit" class="btn btn-primary">
+    Submit
+  </button>
+</form>

@@ -1,21 +1,21 @@
 export class Debt {
   id: number
   amount: number
-  description: string | null
+  description: string
   paid: boolean
-  createdAt: Date
-  updatedAt: Date
-  dueDate: Date
+  createdAt: string
+  updatedAt: string
+  dueDate: string
   userId: number
 
   constructor(
     id: number,
     amount: number,
-    description: string | null,
+    description: string,
     paid: boolean,
-    createdAt: Date,
-    updatedAt: Date,
-    dueDate: Date,
+    createdAt: string,
+    updatedAt: string,
+    dueDate: string,
     userId: number,
   ) {
     this.id = id;

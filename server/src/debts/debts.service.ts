@@ -125,7 +125,7 @@ export class DebtsService {
     return debts;
   }
 
-  findOne(id: number) {
+  findOne(id: number): Promise<Debt | null> {
     return this.prisma.debt.findUnique({ where: { id } });
   }
 

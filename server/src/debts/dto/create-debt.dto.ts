@@ -1,9 +1,10 @@
-import { IsDate, IsNumber, IsString } from 'class-validator';
+import { IsDate, IsNumber, IsString, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 
 export class CreateDebtDto {
   @ApiProperty({ example: 10.0, description: 'Amount of the debt' })
+  @Min(1)
   @IsNumber()
   amount: number;
 

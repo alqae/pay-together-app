@@ -80,6 +80,18 @@ export class DebtsController {
     type: NotFoundException,
     example: new NotFoundException().getResponse(),
   })
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.debtsService.findOne(+id);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({ status: HttpStatus.OK, schema: { example: exampleDebt } })
+  @ApiNotFoundResponse({
+    description: 'Not found',
+    type: NotFoundException,
+    example: new NotFoundException().getResponse(),
+  })
   @ApiUnauthorizedResponse({
     description: 'Unauthorized',
     type: UnauthorizedException,
@@ -93,11 +105,11 @@ export class DebtsController {
     const debt = await this.debtsService.findOne(+id);
 
     if (!debt) {
-      return new NotFoundException();
+      throw new NotFoundException();
     }
 
     if (debt.userId !== req.user.id) {
-      return new UnauthorizedException();
+      throw new UnauthorizedException();
     }
 
     return this.debtsService.setPaid(+id, !debt.paid);
@@ -124,11 +136,11 @@ export class DebtsController {
     const debt = await this.debtsService.findOne(+id);
 
     if (!debt) {
-      return new NotFoundException();
+      throw new NotFoundException();
     }
 
     if (debt.userId !== req.user.id) {
-      return new UnauthorizedException();
+      throw new UnauthorizedException();
     }
 
     return this.debtsService.update(+id, updateDebtDto);
@@ -154,11 +166,11 @@ export class DebtsController {
     const debt = await this.debtsService.findOne(+id);
 
     if (!debt) {
-      return new NotFoundException();
+      throw new NotFoundException();
     }
 
     if (debt.userId !== req.user.id) {
-      return new UnauthorizedException();
+      throw new UnauthorizedException();
     }
 
     return this.debtsService.remove(+id);
