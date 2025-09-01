@@ -8,7 +8,7 @@ import {
   UrlTree
 } from '@angular/router';
 
-import { Auth } from '@core/services/auth';
+import { AuthService } from '@core/services/auth';
 
 type AuthGuardTypeReturn = boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree>;
 
@@ -17,7 +17,7 @@ type AuthGuardTypeReturn = boolean | UrlTree | Observable<boolean | UrlTree> | P
 })
 export class AuthGuard implements CanActivate {
   constructor(
-    private authService: Auth,
+    private authService: AuthService,
     private router: Router
   ) {}
 

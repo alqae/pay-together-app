@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { Auth } from '@core/services/auth';
+import { AuthService } from '@core/services/auth';
 
 @Component({
   selector: 'app-login',
@@ -18,18 +18,18 @@ export class Login {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private auth: Auth
+    private authService: AuthService
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
 
-    this.isLoading$ = this.auth.isLoading$;
+    this.isLoading$ = this.authService.isLoading$;
   }
 
   onSubmit() {
-    this.auth.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
+    this.authService.login(this.loginForm.value.email, this.loginForm.value.password).subscribe({
       next: () => this.router.navigate(['/debts']),
     });
   }

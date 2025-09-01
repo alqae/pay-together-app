@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 import { NotificationService } from '@core/services/notification';
 import { DebtService } from '@core/services/debt';
-import { Auth } from '@core/services/auth';
+import { AuthService } from '@core/services/auth';
 
 import { ToastContainer } from '@core/components/toast-container/toast-container';
 import { ErrorInterceptor } from '@core/interceptors/error-interceptor';
@@ -17,7 +17,7 @@ import { AuthGuard } from '@core/guards/auth-guard';
   declarations: [ToastContainer],
   exports: [ToastContainer],
   providers: [
-    Auth,
+    AuthService,
     DebtService,
     AuthGuard,
     GuestGuard,

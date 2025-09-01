@@ -11,7 +11,7 @@ import { User } from '@core/models/user.model';
 @Injectable({
   providedIn: 'root'
 })
-export class Auth {
+export class AuthService {
   private tokenSubject = new BehaviorSubject<string | null>(null);
   private refreshTokenSubject = new BehaviorSubject<string | null>(null); // Refresh token
   private userSubject = new BehaviorSubject<User | null>(null);

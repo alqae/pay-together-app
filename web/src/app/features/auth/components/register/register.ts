@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 
-import { Auth } from '@core/services/auth';
+import { AuthService } from '@core/services/auth';
 
 @Component({
   selector: 'app-register',
@@ -18,7 +18,7 @@ export class Register {
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
-    private auth: Auth
+    private authService: AuthService
   ) {
     this.registerForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
@@ -26,11 +26,11 @@ export class Register {
       name: ['', [Validators.required]]
     });
 
-    this.isLoading$ = this.auth.isLoading$;
+    this.isLoading$ = this.authService.isLoading$;
   }
 
   onSubmit() {
-    this.auth.register(
+    this.authService.register(
       this.registerForm.value.email,
       this.registerForm.value.password,
       this.registerForm.value.name,
