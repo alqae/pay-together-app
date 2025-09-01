@@ -7,13 +7,14 @@
     <input
       type="search"
       class="form-control"
+      name="search"
       placeholder="Search"
       aria-label="Search"
       (input)="onSearchChange($event)"
     >
 
-    <select class="form-select" (change)="onStatusChange($event)">
-      <option selected>Status...</option>
+    <select class="form-select" name="paid" (change)="onStatusChange($event)">
+      <option value="" selected>Status...</option>
       <option value="false">Pending</option>
       <option value="true">Paid</option>
     </select>
@@ -34,7 +35,6 @@
   </div>
 } @else {
   <div class="list-group mb-3">
-
     @for (item of debts; track item.id) {
       <div
         [ngClass]="{ 'bg-success border-success': item.paid, 'bg-danger border-danger': !item.paid }"
@@ -76,18 +76,20 @@
 
   <nav>
     <ul class="pagination justify-content-center">
-      <li class="page-item">
-        <a class="page-link" href="#" aria-label="Previous">
+      <li class="page-item" [class.disabled]="!canPreviousPage()">
+        <span class="page-link" aria-label="Previous" role="button" (click)="previousPage()">
           <span aria-hidden="true">&laquo;</span>
-        </a>
+        </span>
       </li>
-      <li class="page-item"><a class="page-link" href="#">1</a></li>
-      <li class="page-item"><a class="page-link" href="#">2</a></li>
-      <li class="page-item"><a class="page-link" href="#">3</a></li>
+
       <li class="page-item">
-        <a class="page-link" href="#" aria-label="Next">
+        <span class="page-link">{{ currentPage() }}</span>
+      </li>
+
+      <li class="page-item" [class.disabled]="!canNextPage()">
+        <span class="page-link" aria-label="Next" role="button" (click)="nextPage()">
           <span aria-hidden="true">&raquo;</span>
-        </a>
+        </span>
       </li>
     </ul>
   </nav>

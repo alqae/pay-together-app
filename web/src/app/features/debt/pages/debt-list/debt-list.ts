@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { DebtService } from '@core/services/debt';
@@ -10,7 +10,9 @@ import { Debt } from '@core/models/debt.model';
   templateUrl: './debt-list.html',
   styleUrl: './debt-list.css'
 })
-export class DebtList {
+export class DebtList implements OnInit  {
+  @ViewChild('debtsList') debtsList!: ElementRef;
+
   public error: string | undefined;
 
   public skip: number = 0;
@@ -18,40 +20,9 @@ export class DebtList {
   public total: number = 0;
 
   public search = '';
-  public paid = false;
+  public paid?: string;
 
-  public debts: Debt[] = [
-    new Debt(
-      1,
-      199,
-      'Debt 1',
-      false,
-      '2025-08-31T18:24:25.861Z',
-      '2025-08-31T18:24:25.861Z',
-      '2025-08-31T18:24:25.861Z',
-      1
-    ),
-    new Debt(
-      2,
-      199,
-      'Debt 2',
-      true,
-      '2025-08-31T18:24:25.861Z',
-      '2025-08-31T18:24:25.861Z',
-      '2025-08-31T18:24:25.861Z',
-      1
-    ),
-    new Debt(
-      3,
-      199,
-      'Debt 3',
-      false,
-      '2025-08-31T18:24:25.861Z',
-      '2025-08-31T18:24:25.861Z',
-      '2025-08-31T18:24:25.861Z',
-      1
-    ),
-  ];
+  public debts: Debt[] = [];
 
   // public debts$: Observable<Debt[]>;
   public isLoading$: Observable<boolean>;
@@ -60,25 +31,72 @@ export class DebtList {
     this.isLoading$ = this.debtService.isLoading$;
   }
 
+  ngOnInit() {
+    this.fetchDebts();
+  }
+
   exportToCsv() {
     this.debtService.exportToCsv(this.search, this.paid);
   }
 
   onSearchChange(event: Event) {
+    // TODO: debounce
     this.search = (event.target as HTMLInputElement).value;
     this.resetPagination();
-    // TODO refresh debts
+    this.fetchDebts();
   }
 
   onStatusChange(event: Event) {
-    this.paid = (event.target as HTMLSelectElement).value === 'true';
+    this.paid = (event.target as HTMLSelectElement).value;
     this.resetPagination();
-    // TODO refresh debts
+    this.fetchDebts();
   }
 
   resetPagination() {
     this.skip = 0;
     this.take = 10;
     this.total = 0;
+  }
+
+  currentPage(): number {
+    return this.skip / this.take + 1;
+  }
+
+  canNextPage(): boolean {
+    return this.skip + this.take < this.total;
+  }
+
+  canPreviousPage(): boolean {
+    return this.skip > 0;
+  }
+
+  nextPage() {
+    if (this.skip + this.take >= this.total) return;
+    this.skip += this.take;
+    this.scrollToTop();
+    setTimeout(() => this.fetchDebts(), 250);
+  }
+
+  previousPage() {
+    if (this.skip <= 0) return;
+    this.skip -= this.take;
+    this.scrollToTop();
+    setTimeout(() => this.fetchDebts(), 250);
+  }
+
+  fetchDebts() {
+    this.debtService.getDebts(this.skip, this.take, this.search, this.paid).subscribe({
+      next: (result) => {
+        this.debts = result.debts;
+        this.total = result.total;
+      },
+      error: (error) => {
+        this.error = error;
+      }
+    });
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 }

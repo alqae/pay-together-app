@@ -21,3 +21,13 @@ export class DebtCountersResponse {
     this.paidDebts = paidDebts;
   }
 }
+
+export class PaginatedResponse<T> {
+  total: number;
+  debts: T[];
+
+  constructor(total: number, debts: T[]) {
+    this.total = total;
+    this.debts = debts;
+  }
+}

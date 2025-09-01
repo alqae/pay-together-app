@@ -3,8 +3,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
+import { DebtCountersResponse, PaginatedResponse } from '@core/models/api-response.model';
 import { CreateDebtRequest, UpdateDebtRequest } from '@core/models/api-request.model';
-import { DebtCountersResponse } from '@core/models/api-response.model';
 import { Debt } from '@core/models/debt.model';
 
 @Injectable({
@@ -28,7 +28,7 @@ export class DebtService {
     skip: number,
     take: number,
     description?: string,
-    paid?: boolean,
+    paid?: string,
   ) {
     let params = new HttpParams().set("skip", skip).set("take", take);
 
@@ -36,12 +36,12 @@ export class DebtService {
       params = params.set("description", description)
     }
 
-    if (paid) {
-      params = params.set("paid", paid.toString())
+    if (paid !== undefined && paid !== "") {
+      params = params.set("paid", paid)
     }
 
     this.isLoadingSubject.next(true);
-    return this.http.get(`${this.API_URL}debts`, { params })
+    return this.http.get<PaginatedResponse<Debt>>(`${this.API_URL}debts`, { params })
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
@@ -75,15 +75,15 @@ export class DebtService {
       .pipe(finalize(() => this.isLoadingSubject.next(false)));
   }
 
-  exportToCsv(description?: string, paid?: boolean) {
+  exportToCsv(description?: string, paid?: string) {
     let params = new HttpParams()
 
     if (description) {
       params = params.set("description", description)
     }
 
-    if (paid) {
-      params = params.set("paid", paid.toString())
+    if (paid != undefined && paid !== "") {
+      params = params.set("paid", paid)
     }
 
     this.isLoadingSubject.next(true);
