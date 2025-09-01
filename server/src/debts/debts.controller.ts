@@ -74,6 +74,46 @@ export class DebtsController {
   }
 
   @HttpCode(HttpStatus.OK)
+  @Get('/export')
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'CSV file successfully generated',
+    content: {
+      'text/csv': {
+        schema: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Not debts found',
+    type: NotFoundException,
+    example: new NotFoundException().getResponse(),
+  })
+  @ApiQuery({ name: 'description', required: false, type: String })
+  @ApiQuery({ name: 'paid', required: false, type: Boolean })
+  async exportToCSV(
+    @Request() req: Request & { user: User },
+    @Res() res: Response,
+    @Query('description') description?: string,
+    @Query('paid') paid?: boolean,
+  ) {
+    const debts = await this.debtsService.getDebsUnpaginated(
+      req.user.id,
+      description,
+      paid,
+    );
+
+    if (debts.length === 0) {
+      throw new NotFoundException();
+    }
+
+    return this.debtsService.generateCsv(debts, res);
+  }
+
+  @HttpCode(HttpStatus.OK)
   @ApiResponse({ status: HttpStatus.OK, schema: { example: exampleDebt } })
   @ApiNotFoundResponse({
     description: 'Not found',
@@ -174,46 +214,6 @@ export class DebtsController {
     }
 
     return this.debtsService.remove(+id);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Get('/export')
-  @ApiResponse({
-    status: HttpStatus.OK,
-    description: 'CSV file successfully generated',
-    content: {
-      'text/csv': {
-        schema: {
-          type: 'string',
-          format: 'binary',
-        },
-      },
-    },
-  })
-  @ApiNotFoundResponse({
-    description: 'Not debts found',
-    type: NotFoundException,
-    example: new NotFoundException().getResponse(),
-  })
-  @ApiQuery({ name: 'description', required: false, type: String })
-  @ApiQuery({ name: 'paid', required: false, type: Boolean })
-  async exportToCSV(
-    @Request() req: Request & { user: User },
-    @Res() res: Response,
-    @Query('description') description?: string,
-    @Query('paid') paid?: boolean,
-  ) {
-    const debts = await this.debtsService.getDebsUnpaginated(
-      req.user.id,
-      description,
-      paid,
-    );
-
-    if (debts.length === 0) {
-      throw new NotFoundException();
-    }
-
-    return this.debtsService.generateCsv(debts, res);
   }
 
   @HttpCode(HttpStatus.OK)
